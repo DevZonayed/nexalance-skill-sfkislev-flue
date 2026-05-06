@@ -19,6 +19,7 @@ for harnesses that discover skills there out of the box.
 | Cursor                | Installs a global skill at `~/.cursor/skills/flue/` with `SKILL.md`, `shared/*`, `docs/*`, and `adapters/*/APP.md`. |
 | Cline                 | Installs a global skill at `~/.cline/skills/flue/` with the local docs bundle. |
 | Kilo CLI              | Installs a global skill at `~/.kilo/skills/flue/` with the local docs bundle. |
+| Hermes Agent          | If `~/.hermes/` exists, installs a global skill at `~/.hermes/skills/flue/` with the local docs bundle. |
 | OpenCode              | Installs `~/.config/opencode/agents/flue/` with the local docs bundle and writes `~/.config/opencode/agents/flue.md`. |
 | OpenClaw              | Installs `~/.openclaw/skills/flue/` with the local docs bundle. |
 | Generic (`AGENTS.md`) | Installs `./flue/` with the local docs bundle plus a pointer from `AGENTS.md` in the target directory (defaults to the current directory unless `--path` is provided). |

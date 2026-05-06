@@ -77,7 +77,7 @@ CONTEXT_EXAMPLES = {
     "word": "context.py",
 }
 
-AGENT_DOC_TARGETS = ("codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "opencode", "openclaw", "copilot", "generic", "all")
+AGENT_DOC_TARGETS = ("codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot", "generic", "all")
 
 HARNESS_CONFIGS = {
     "codex": {
@@ -131,6 +131,13 @@ HARNESS_CONFIGS = {
         "config_dir": Path(".kilo"),
         "global_targets": [
             Path(".kilo") / "skills" / "flue" / "SKILL.md",
+        ],
+    },
+    "hermes": {
+        "commands": [],
+        "config_dir": Path(".hermes"),
+        "global_targets": [
+            Path(".hermes") / "skills" / "flue" / "SKILL.md",
         ],
     },
     "opencode": {
@@ -889,6 +896,32 @@ def install_kilo_docs(args):
     return ok
 
 
+def install_hermes_docs(args):
+    ok = True
+    if args.path:
+        return install_local_docs_bundle(
+            Path(args.path).expanduser() / "flue",
+            entry_filename="SKILL.md",
+            entry_text=installed_skill_text(
+                "Use when Hermes Agent needs to inspect, install, test, or run Flue adapters to control supported Windows and macOS desktop apps through local scripting bridges.",
+            ),
+            force=args.force,
+        )
+    for home in home_candidates():
+        hermes_root = home / ".hermes"
+        if not hermes_root.exists():
+            continue
+        ok = install_local_docs_bundle(
+            hermes_root / "skills" / "flue",
+            entry_filename="SKILL.md",
+            entry_text=installed_skill_text(
+                "Use when Hermes Agent needs to inspect, install, test, or run Flue adapters to control supported Windows and macOS desktop apps through local scripting bridges.",
+            ),
+            force=args.force,
+        ) and ok
+    return ok
+
+
 def install_cline_docs(args):
     ok = True
     if args.path:
@@ -1122,6 +1155,15 @@ def uninstall_kilo_docs(args):
     return removed
 
 
+def uninstall_hermes_docs(args):
+    removed = False
+    if args.path:
+        return remove_named_dirs(Path(args.path).expanduser(), ("flue", "softwire"))
+    for home in home_candidates():
+        removed = remove_named_dirs(home / ".hermes" / "skills", ("flue", "softwire")) or removed
+    return removed
+
+
 def uninstall_cline_docs(args):
     removed = False
     if args.path:
@@ -1203,7 +1245,7 @@ def uninstall_universal_global_docs():
 
 
 def cmd_install_agent_docs(args):
-    targets = ("codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "opencode", "openclaw", "copilot", "generic") if args.target == "all" else (args.target,)
+    targets = ("codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot", "generic") if args.target == "all" else (args.target,)
     ok = True
     for target in targets:
         if target == "codex":
@@ -1220,6 +1262,8 @@ def cmd_install_agent_docs(args):
             ok = install_cline_docs(args) and ok
         elif target == "kilo":
             ok = install_kilo_docs(args) and ok
+        elif target == "hermes":
+            ok = install_hermes_docs(args) and ok
         elif target == "opencode":
             ok = install_opencode_docs(args) and ok
         elif target == "openclaw":
@@ -1237,7 +1281,7 @@ def cmd_uninstall(args):
         if not targets:
             targets = ["generic"]
     elif args.agent == "all":
-        targets = ["codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "opencode", "openclaw", "copilot", "generic"]
+        targets = ["codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot", "generic"]
     else:
         targets = [args.agent]
 
@@ -1258,6 +1302,8 @@ def cmd_uninstall(args):
             removed_any = uninstall_cline_docs(args) or removed_any
         elif target == "kilo":
             removed_any = uninstall_kilo_docs(args) or removed_any
+        elif target == "hermes":
+            removed_any = uninstall_hermes_docs(args) or removed_any
         elif target == "opencode":
             removed_any = uninstall_opencode_docs(args) or removed_any
         elif target == "openclaw":
@@ -1277,7 +1323,7 @@ def cmd_setup(args):
             return 1
         chosen = targets
     elif args.agent == "all":
-        chosen = ["codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "opencode", "openclaw", "copilot"]
+        chosen = ["codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot"]
     else:
         chosen = [args.agent]
 

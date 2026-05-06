@@ -30,12 +30,15 @@ flue setup --agent gemini
 flue setup --agent qwen
 flue setup --agent cursor
 flue setup --agent kilo
+flue setup --agent hermes
 flue setup --agent opencode
 flue setup --agent openclaw
 ```
 
 The `claude` target is for Claude Code. Claude Desktop/Cowork is not supported.
 The `kilo` target installs a global skill at `~/.kilo/skills/flue/SKILL.md`.
+The `hermes` target installs a global skill at `~/.hermes/skills/flue/SKILL.md`
+when `~/.hermes/` already exists.
 
 Harness-by-harness discoverability details are documented in [Harness support and discoverability](harnesses.md).
 
