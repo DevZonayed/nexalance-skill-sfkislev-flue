@@ -4,6 +4,8 @@ Running `flue setup` makes Flue discoverable by agentic frameworks.
 Setup now installs a local Flue docs bundle into each harness location, then
 adds a small pointer so the harness can read those docs directly from its own
 skill or rules directory.
+It also installs a universal global skill bundle at `~/.agents/skills/flue/`
+for harnesses that discover skills there out of the box.
 
 ## Supported Harnesses
 
@@ -23,6 +25,7 @@ skill or rules directory.
 
 ## Notes
 
+- Every setup also installs `~/.agents/skills/flue/` as a shared global skill.
 - Auto setup mode detects installed harnesses and registers all detected targets.
 - If no supported harness is detected, `flue setup` stops and reports that Flue needs a harness in order to work.
 - Use `flue agents` to inspect detected agents.

@@ -1047,6 +1047,20 @@ def install_generic_docs(args):
     return ok
 
 
+def install_universal_global_docs(*, force):
+    ok = True
+    for home in home_candidates():
+        ok = install_local_docs_bundle(
+            home / ".agents" / "skills" / "flue",
+            entry_filename="SKILL.md",
+            entry_text=installed_skill_text(
+                "Use when an agent needs to inspect, install, test, or run Flue adapters to control supported Windows and macOS desktop apps through local scripting bridges.",
+            ),
+            force=force,
+        ) and ok
+    return ok
+
+
 def uninstall_codex_docs(args):
     removed = False
     if args.path:
@@ -1181,6 +1195,13 @@ def uninstall_generic_docs(args):
     return removed
 
 
+def uninstall_universal_global_docs():
+    removed = False
+    for home in home_candidates():
+        removed = remove_named_dirs(home / ".agents" / "skills", ("flue", "softwire")) or removed
+    return removed
+
+
 def cmd_install_agent_docs(args):
     targets = ("codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "opencode", "openclaw", "copilot", "generic") if args.target == "all" else (args.target,)
     ok = True
@@ -1221,7 +1242,7 @@ def cmd_uninstall(args):
         targets = [args.agent]
 
     print("Removing Flue agent instructions for: " + ", ".join(targets))
-    removed_any = False
+    removed_any = uninstall_universal_global_docs()
     for target in targets:
         if target == "codex":
             removed_any = uninstall_codex_docs(args) or removed_any
@@ -1268,6 +1289,7 @@ def cmd_setup(args):
             print(f"  {home}")
 
     ok = True
+    ok = install_universal_global_docs(force=args.force) and ok
     for target in chosen:
         setup_args = argparse.Namespace(target=target, path=None, force=args.force)
         ok = (cmd_install_agent_docs(setup_args) == 0) and ok

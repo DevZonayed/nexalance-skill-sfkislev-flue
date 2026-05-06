@@ -18,7 +18,8 @@ COM-backed adapters.
 By default, setup detects local harnesses and registers Flue with all of
 them. It also installs a local Flue docs bundle into each detected harness
 directory so the agent can read the docs directly from its own skill or rules
-area.
+area. Setup also installs a shared global skill bundle at
+`~/.agents/skills/flue/`.
 
 For deterministic setup:
 
