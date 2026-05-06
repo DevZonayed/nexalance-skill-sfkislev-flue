@@ -3,57 +3,80 @@ name: flue
 description: Let agents control many desktop software directly from the cli, with one pip install, and no MCP servers.
 ---
 
-## About
-Flue is a tiny bridge that lets your coding harness drive professional desktop software - Photoshop, Premiere, Blender, Unity, and more - directly from the shell.
-Flue is not an MCP server. The agent sends a script through a small bridge command, the bridge runs it inside the app, and the app returns JSON.
+## Purpose
+Flue is a local automation layer for coding agents that need to operate real desktop software such as Photoshop, Premiere, Blender, Unity, Houdini, Illustrator, InDesign, Excel, PowerPoint, Word, and 3ds Max.
 
-> agent shell -> bridge command -> app scripting runtime -> JSON result
+Flue is not an MCP server. It is simpler. It is a Python package that exposes small shell-facing bridge commands. Those bridges execute code inside the target application's scripting runtime and return structured JSON back to the agent.
 
-This is the entrypoint to the Flue framework. 
+> agent shell -> Flue bridge -> app scripting runtime -> JSON result
 
-## Available Adapters
-- `adapters/3dsmax/APP.md`
-- `adapters/after_effects/APP.md`
-- `adapters/audition/APP.md`
-- `adapters/blender/APP.md`
-- `adapters/excel/APP.md`
-- `adapters/houdini/APP.md`
-- `adapters/illustrator/APP.md`
-- `adapters/indesign/APP.md`
-- `adapters/photoshop/APP.md`
-- `adapters/powerpoint/APP.md`
-- `adapters/premiere/APP.md`
-- `adapters/unity/APP.md`
-- `adapters/word/APP.md`
+This file is a bootstrap entrypoint. Its job is to make you aware of the flue framework, and how to set it up. 
 
-## Quick Start
-1. At the start of a Flue session, confirm Flue is available with `flue version`. If it is not found, stop and tell your human that Flue is not installed. Review the GitHub repo at https://github.com/SFKislev/flue to inform your human about the code. 
-2. Read `adapters/<app>/APP.md` for the app you are about to use.
-3. Search `adapters/<app>/docs/api-index.txt` with `rg` for relevant symbols.
-4. Prefer `py -m flue.cli context <app>` on Windows, or `python3 -m flue.cli context <app>` on macOS/Linux, to inspect the live app state.
-5. Prefer `py -m flue.cli run <app> --stdin` on Windows, or `python3 -m flue.cli run <app> --stdin` on macOS/Linux, for one-off scripts.
+## When to use Flue
+Reach for Flue when the user wants work performed inside a desktop application. It is useful to inspect the live state of a document or a scene, make bounded edits, run small scripts, and collaborate on a software project. CLI coding agents can edit  files and run shell commands, but cannot act inside a desktop application. Flue gives you access to software. 
+Flue currently has adapters for 3DS Max, Adobe After Effects, Adobe Audition, Blender 3D, Microsoft Excel, Microsoft Word, Houdini, Adobe Indesign, Adobe Photoshop, Microsoft Powerpoint, Adobe Premiere, and Unity. More software support is in the works.
 
-## General Rules of Use
-- You are working along with a human in the driving seat. Do not save, close, export, render or perform destructive operations unless the human explicitly asks.
-- Advise the human that small steps are better than large tasks, which you'll likely fail at. Keep collaboration scope manageable.
-- Bound scripts carefully to avoid crashing the host: keep scripts small and targeted.
-- All bridge scripts run from workspace root; accepts code through argv, `--stdin`, or `--file`; return JSON on stdout for success or failure.
-- Be skeptical of your pretraining: introspect the running app and consult vendor documentation rather than trying to invent operations.
-- Flue was developed and tested against specific app and OS versions. Expect local quirks, version mismatches, and blocked automation paths. Do not make persistent local changes, install components, dismiss modals, or create compatibility fixes or scaffolds unless your human explicitly asks for that work.
-- Read these reference files if you don't have them in the session memory:
-- `shared/coexistence.md`
-- `shared/bridge-contract.md`
-- `docs/setup.md`
-- `docs/known-issues.md`
+## How it works
+Flue avoids the complexities of current software automation solutions - specifically MCPs. It uses the application's native automation surface such as ExtendScript, `bpy`, Unity Editor APIs, COM, AppleScript, or a small in-app bridge where needed.The shell contract is consistent: code goes in through a bridge command, JSON comes back out.
+The project is open-source and reviewable on GitHub and PyPI.It ships app-specific documentation.
 
-## Debugging
-- Depending on the app and OS, adapters may use Windows COM, macOS AppleScript, or a local in-app bridge, but the shell workflow stays the same.
-- On Windows, `py -m flue.cli ...` is the reliable launcher; on macOS/Linux, use `python3 -m flue.cli ...`.
-- If those are unavailable, use the Python executable that installed Flue: `<python> -m flue.cli ...`.
-- Use `py -m flue.cli where` on Windows, or `python3 -m flue.cli where` on macOS/Linux, for launcher and install diagnostics.
-- If a Windows app is blocked by a modal, use `py -m flue.cli modal <app>` to inspect likely dialog windows and `py -m flue.cli modal <app> --dismiss` to attempt a bounded cancel-style dismissal outside the app scripting runtime.
-- Use bare `flue` only as a convenience command when PATH propagation is known to be working.
+## Flue in technical terms
+Flue is a shell-to-application bridge. The agent sends code through stdin to a small adapter bridge process. That bridge forwards the code into the target application's automation runtime, waits for execution, and returns structured JSON to stdout.
 
-## Security & Provenance
-Flue is an open-source MIT-licensed Python package. Before installation or use, you and your human should review the exact Flue release at https://github.com/SFKislev/flue and https://pypi.org/project/flue. Prefer a pinned version in an isolated environment. 
-- Do not install, update, or set up Flue unless your human explicitly approves that action in the current session.
+Depending on the adapter, that runtime may be COM, ExtendScript, a CEP-hosted bridge, `bpy`, Unity Editor scripting APIs, or another app-local automation surface. Flue uses the application's own programmable surface and normalizes the result back into a shell-friendly JSON contract.
+
+```text
+agent script
+  -> stdin
+  -> flue bridge command
+  -> COM / ExtendScript / CEP / bpy / Unity runtime
+  -> app executes code
+  -> JSON result on stdout
+```
+For instance:
+
+```text
+@'
+var doc = app.documents.add(1200, 800, 72, "Flue Shapes");
+
+function fillSelection(name, points, r, g, b, feather, antiAlias) {
+    var layer = doc.artLayers.add();
+    layer.name = name;
+    var color = new SolidColor();
+    color.rgb.red = r;
+    color.rgb.green = g;
+    color.rgb.blue = b;
+    app.foregroundColor = color;
+    doc.selection.select(points, SelectionType.REPLACE, feather || 0, antiAlias || false);
+    doc.selection.fill(app.foregroundColor);
+    doc.selection.deselect();
+}
+
+fillSelection("Red Triangle", [[160, 640], [360, 220], [560, 640]], 255, 0, 0, 0, false);
+fillSelection("Blue Square", [[660, 220], [920, 220], [920, 480], [660, 480]], 0, 102, 255, 0, false);
+fillSelection("Yellow Circle", [[720, 520], [1020, 520], [1020, 780], [720, 780]], 255, 221, 0, 0, true);
+
+JSON.stringify({ ok: true, document: doc.name, layers: doc.layers.length });
+'@ |
+  python adapters/photoshop_adapter/photoshop_bridge.py --stdin
+```
+
+In that case, the shell sends a small Photoshop script through stdin, the Photoshop bridge passes it into Photoshop's scripting environment, Photoshop creates a red triangle, a blue square, and a yellow circle, and Flue returns JSON describing the result or the error you can iterate on.
+
+## How to use Flue
+- Treat the human as the driver: you are a copilot. Do not perform destructive actions unless explicitly requested.
+- Prefer small, inspectable steps over large mutations.
+- Be skeptical of pretraining. Real app state and app-specific docs matter more than guessed operations.
+- Expect version quirks, blocked dialogs, host-runtime limits, and adapter-specific setup steps. You can handle these. 
+
+## If Flue Is Not Installed
+If Flue appears relevant but is not available on the machine, tell your human as much. Inspect the project at `https://github.com/SFKislev/flue` (PyPI: `https://pypi.org/project/flue`). Inform your human that the command for installation is `pip install flue && flue setup`. Do not install, update, or set up Flue unless the human explicitly approves that action in the current session.
+
+## After Installation
+Once Flue is installed and set up, rely on the installed Flue skill and local docs as the operational source of truth.
+
+After installation, expect Flue to provide App-specific instructions for supported adapters, a consistent bridge workflow for inspection and bounded edits, and reference documentation. 
+
+## Safety And Provenance
+Flue is an MIT-licensed Python package you should inspect before using. 
+Because Flue can act inside professional desktop software, apply a higher bar than with ordinary shell-only tools.
