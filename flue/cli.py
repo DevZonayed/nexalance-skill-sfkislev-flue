@@ -5,6 +5,8 @@ import os
 import shutil
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 
@@ -244,6 +246,18 @@ def installed_flue_version():
         return importlib.metadata.version("flue")
     except importlib.metadata.PackageNotFoundError:
         return None
+
+
+def latest_pypi_flue_version():
+    try:
+        with urllib.request.urlopen("https://pypi.org/pypi/flue/json", timeout=10) as response:
+            payload = json.load(response)
+    except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
+        return None
+
+    info = payload.get("info") or {}
+    version = info.get("version")
+    return version.strip() if isinstance(version, str) and version.strip() else None
 
 
 def running_from_windows_flue_exe():
@@ -1334,10 +1348,13 @@ def cmd_setup(args):
         for home in homes:
             print(f"  {home}")
 
+    # Setup always refreshes existing Flue skill bundles in place so a
+    # bootstrap/base skill install can be upgraded without manual cleanup.
+    effective_force = True
     ok = True
-    ok = install_universal_global_docs(force=args.force) and ok
+    ok = install_universal_global_docs(force=effective_force) and ok
     for target in chosen:
-        setup_args = argparse.Namespace(target=target, path=None, force=args.force)
+        setup_args = argparse.Namespace(target=target, path=None, force=effective_force)
         ok = (cmd_install_agent_docs(setup_args) == 0) and ok
 
     info = flue_install_info()
@@ -1374,6 +1391,10 @@ def cmd_update(args):
 
     before_version = installed_flue_version()
     if not args.docs_only:
+        latest_version = latest_pypi_flue_version()
+        if before_version and latest_version and before_version == latest_version and not args.force_docs:
+            print(f"Flue is already up to date ({before_version}).")
+            return 0
         if before_version:
             print(f"Current Flue version: {before_version}")
         print("Updating the Flue Python package with pip...")
@@ -1530,7 +1551,11 @@ def build_parser():
         action="store_true",
         help="Deprecated compatibility flag. Auto setup now registers every detected harness.",
     )
-    setup_parser.add_argument("--force", action="store_true", help="Replace existing Flue docs.")
+    setup_parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Deprecated compatibility flag. Setup now always replaces existing Flue docs.",
+    )
     setup_parser.set_defaults(func=cmd_setup)
 
     update_parser = subparsers.add_parser(

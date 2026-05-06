@@ -20,6 +20,8 @@ them. It also installs a local Flue docs bundle into each detected harness
 directory so the agent can read the docs directly from its own skill or rules
 area. Setup also installs a shared global skill bundle at
 `~/.agents/skills/flue/`.
+If a Flue skill bundle already exists in one of those locations, setup
+replaces it in place.
 
 For deterministic setup:
 
@@ -66,10 +68,12 @@ agent-facing docs bundles:
 py -m flue.cli update
 ```
 
-This runs `pip install --upgrade flue`, then runs `flue setup --force` from a
-fresh Python process so the installed docs bundles are refreshed even when the
-package is already current. `py -m flue.cli update --force-docs` remains
-accepted for compatibility, but is no longer required for a docs refresh.
+This checks PyPI for a newer Flue release before running `pip install
+--upgrade flue`. If the installed version is already current, update exits
+without reinstalling. When an update does install or when you explicitly use
+`--docs-only`, it then runs `flue setup` from a fresh Python process so the
+installed docs bundles are refreshed. `py -m flue.cli update --force-docs`
+remains accepted for compatibility when you want a same-version docs refresh.
 
 ## Run a Smoke Test
 

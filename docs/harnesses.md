@@ -28,6 +28,7 @@ for harnesses that discover skills there out of the box.
 
 - Every setup also installs `~/.agents/skills/flue/` as a shared global skill.
 - Auto setup mode detects installed harnesses and registers all detected targets.
+- Re-running `flue setup` replaces any existing Flue bundle in those target locations.
 - If no supported harness is detected, `flue setup` stops and reports that Flue needs a harness in order to work.
 - Use `flue agents` to inspect detected agents.
 - Use `flue setup --agent <target>` for specific, single-harness registration.
