@@ -1,11 +1,12 @@
 <!-- <p>
   <img src="docs/images/logo.svg" alt="Flue logo" width="250" />
 </p> -->
+
 <p align="center">
   <img src="docs/images/start-new.gif" alt="Flue demo" width="500" />
 </p>
 <h1 align="center">Flue</h1>
-<p align="center">Help your humans with their software</p>
+<p align="center">Let agents control desktop software without MCPs</p>
 
 <p align="center">
   <a href="https://pypi.org/project/flue/"><img src="https://img.shields.io/pypi/v/flue" alt="PyPI version" /></a>
@@ -27,7 +28,7 @@ Flue is a generalized framework. It is a semi-universal communication bridge bet
 
 > agent shell -> bridge command -> app scripting runtime -> JSON result
 
-This is done without setting up servers, without brittle screenshots and without schema definitions. The bridge exposes the scripting layer already built into each application. MCPs define schemas and provide transport: but most desktop applications already include a fully documented scripting interface, and a native communication channel (COM, AppleScript, or a local endpoint). MCPs are high maintenance, and computer use setups are fragile and clumsy; Flue is low maintenance and less fragile.
+This is done without setting up servers, without brittle screenshots and without schema definitions. The bridge exposes the scripting layer already built into each application. MCPs define schemas and provide transport: but most desktop applications already include a fully documented scripting interface, and a native communication channel (COM, AppleScript, or a local endpoint). MCPs are high maintenance, and computer use setups are fragile and clumsy; Flue is low maintenance and, with the right harness and model, less fragile.
 
 <p align="center">
   <img src="docs/images/after-effects-demo.gif" alt="Flue demo" width="500" />
@@ -71,12 +72,13 @@ A single Flue installation supports, out of the box, many applications. Agents, 
 - Cursor
 - OpenCode
 - OpenClaw
+- Hermes
 - Gemini CLI
 - Qwen CLI
 - Cline
 - Kilo CLI
 
-[See which files are edited upon installation](docs/harnesses.md)
+Flue is installed as a skill surfacing the python bridge. [See which files are edited upon installation](docs/harnesses.md)
 
 <p align="center">
   <img src="docs/images/conversation.gif" alt="Flue demo" width="500" />
