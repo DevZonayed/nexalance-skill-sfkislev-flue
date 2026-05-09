@@ -17,18 +17,11 @@ Get-Content adapters/3dsmax_adapter/examples/context.py -Raw | python adapters/3
 
 ## Local Memory
 
-If `APP.local.md` exists in this directory, review it before performing an
-operation when local installation details, prior failures, or version-specific
-behavior may matter.
+If `APP.local.md` exists in this directory, review it before performing an operation when local installation details, prior failures, or version-specific behavior may matter.
 
-After completing an operation, if you encountered a repeatable issue or
-verified something worth remembering about this local installation, add a short
-note to `APP.local.md`.
+After completing an operation, if you encountered a repeatable issue or verified something worth remembering about this local installation, add a short note to `APP.local.md`.
 
-Keep notes concise and factual. Record only local, reusable insights such as
-verified quirks, recovery steps, version-specific gaps, or runtime-discovered
-details. Do not copy general guidance from `APP.md`, and do not add temporary
-task-specific notes.
+Keep notes concise and factual. Record only local, reusable insights such as verified quirks, recovery steps, version-specific gaps, or runtime-discovered details. Do not copy general guidance from `APP.md`, and do not add temporary task-specific notes.
 
 API lookup workflow:
 
@@ -43,8 +36,7 @@ API lookup workflow:
 
 Connection recovery:
 
-If the bridge says the session file is missing or the local eval endpoint is
-unreachable, ask the user to:
+If the bridge says the session file is missing or the local eval endpoint is unreachable, ask the user to:
 
 1. Open 3ds Max.
 2. Confirm the startup script is installed.

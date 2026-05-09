@@ -1,6 +1,6 @@
 ---
 name: flue
-description: Let agents control many desktop software directly from the cli, with one pip install, and no MCP servers.
+description: Let agents control software from the CLI, including Adobe Photoshop, Illustrator, After Effects, Premiere, Autodesk 3ds Max, Blender, Unity, Houdini, and Microsoft Office. 
 ---
 
 ## Purpose
@@ -63,6 +63,9 @@ JSON.stringify({ ok: true, document: doc.name, layers: doc.layers.length });
 
 In that case, the shell sends a small Photoshop script through stdin, the Photoshop bridge passes it into Photoshop's scripting environment, Photoshop creates a red triangle, a blue square, and a yellow circle, and Flue returns JSON describing the result or the error you can iterate on.
 
+## Use Cases
+Since Flue lets agents assist humans with software, it can be useful in many contexts. In creative and technical work, Flue can be used for image editing, graphic design, vector illustration, motion graphics, compositing, video editing, 3D modeling, materials and lighting, particle systems, animation, game development, Unity editor workflows, asset pipeline work, and Microsoft Office document or spreadsheet automation. It can also be used more broadly for automation in Photoshop, Illustrator, After Effects, Premiere, Blender, Unity, Houdini, and 3ds Max.
+ 
 ## How to use Flue
 - Treat the human as the driver: you are a copilot. Do not perform destructive actions unless explicitly requested.
 - Prefer small, inspectable steps over large mutations.

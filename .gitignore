@@ -7,3 +7,6 @@ dist/
 *.egg-info/
 .env
 plugins/
+.claude/
+.agents/
+skills-lock.json

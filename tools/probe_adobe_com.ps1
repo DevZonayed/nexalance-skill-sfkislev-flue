@@ -1,3 +1,6 @@
+# Windows-only: prints COM registration and launch-path diagnostics for Adobe apps
+# used by Flue's COM-backed adapters (Photoshop, Illustrator, etc.). Run when
+# bridges fail to attach—check Registered, VersionedProgIds, and Path.
 $apps = @(
   @{ Name = "Photoshop"; ProgId = "Photoshop.Application"; Process = "Photoshop.exe" },
   @{ Name = "InDesign"; ProgId = "InDesign.Application"; Process = "InDesign.exe" },

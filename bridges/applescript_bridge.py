@@ -34,8 +34,7 @@ def run_bridge(*, app_name, script_name="ExtendScript", recovery_hint=None, exec
         if not code.strip():
             raise ValueError(f"{script_name} input is empty.")
 
-        # Write the script to a temp file to avoid any quoting issues when
-        # embedding arbitrary ExtendScript inside an AppleScript string literal.
+        # Write the script to a temp file to avoid any quoting issues when embedding arbitrary ExtendScript inside an AppleScript string literal.
         with tempfile.NamedTemporaryFile(suffix=".jsx", mode="w", encoding="utf-8", delete=False) as tmp:
             tmp.write(code)
             tmp_path = tmp.name
