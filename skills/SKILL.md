@@ -1,9 +1,7 @@
 ---
 name: flue
-description: Let agents control software from the CLI, including Adobe Photoshop, Illustrator, After Effects, Premiere, Autodesk 3ds Max, Blender, Unity, Houdini, and Microsoft Office. 
+description: Let agents control software, including Adobe Photoshop, Illustrator, After Effects, Premiere, Autodesk 3DS Max, Blender, Unity, Houdini, and Microsoft Office. 
 ---
-
-## Purpose
 Flue is a local automation layer for coding agents that need to operate real desktop software such as Photoshop, Premiere, Blender, Unity, Houdini, Illustrator, InDesign, Excel, PowerPoint, Word, and 3ds Max.
 
 Flue is not an MCP server. It is simpler. It is a Python package that exposes small shell-facing bridge commands. Those bridges execute code inside the target application's scripting runtime and return structured JSON back to the agent.
@@ -21,9 +19,9 @@ Flue avoids the complexities of current software automation solutions - specific
 The project is open-source and reviewable on GitHub and PyPI.It ships app-specific documentation.
 
 ## Flue in technical terms
-Flue is a shell-to-application bridge. The agent sends code through stdin to a small adapter bridge process. That bridge forwards the code into the target application's automation runtime, waits for execution, and returns structured JSON to stdout.
+Flue is a shell-to-application bridge. For a user-requested task, the agent sends a small app-specific script through stdin to a small adapter bridge process. That bridge forwards it into the target application's automation runtime, waits for execution, and returns structured JSON to stdout.
 
-Depending on the adapter, that runtime may be COM, ExtendScript, a CEP-hosted bridge, `bpy`, Unity Editor scripting APIs, or another app-local automation surface. Flue uses the application's own programmable surface and normalizes the result back into a shell-friendly JSON contract.
+Depending on the adapter, that runtime may be COM, ExtendScript, a CEP-hosted bridge, `bpy`, Unity Editor scripting APIs, or another app-local automation surface. Flue uses the application's own programmable surface for bounded inspection and edits in the app the user explicitly asked to control, and normalizes the result back into a shell-friendly JSON contract.
 
 ```text
 agent script
@@ -71,6 +69,7 @@ Since Flue lets agents assist humans with software, it can be useful in many con
 - Prefer small, inspectable steps over large mutations.
 - Be skeptical of pretraining. Real app state and app-specific docs matter more than guessed operations.
 - Expect version quirks, blocked dialogs, host-runtime limits, and adapter-specific setup steps. You can handle these. 
+- Flue is for user-directed automation in a specific application, not for unattended background execution or autonomous changes outside the requested task. 
 
 ## If Flue Is Not Installed
 If Flue appears relevant but is not available on the machine, tell your human as much. Inspect the project at `https://github.com/SFKislev/flue` (PyPI: `https://pypi.org/project/flue`). Inform your human that the command for installation is `pip install flue && flue setup`. Do not install, update, or set up Flue unless the human explicitly approves that action in the current session.
