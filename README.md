@@ -6,13 +6,14 @@
   <img src="docs/images/start-new.gif" alt="Flue demo" width="500" />
 </p>
 <h1 align="center">Flue</h1>
-<p align="center">Let agents control desktop software without MCPs</p>
+<p align="center">Let agents control desktop software</p>
 
 <p align="center">
   <a href="https://pypi.org/project/flue/"><img src="https://img.shields.io/pypi/v/flue" alt="PyPI version" /></a>
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT" />
   <img src="https://img.shields.io/badge/Windows-0078D4?logo=windows" alt="Windows" />
   <img src="https://img.shields.io/badge/macOS-000000?logo=apple" alt="macOS" />
+  <a href="https://skills.sh/SFKislev/flue"><img src="https://skills.sh/b/SFKislev/flue" alt="skills.sh" /></a>
 </p>
 
 ```bash
