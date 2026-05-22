@@ -79,7 +79,7 @@ CONTEXT_EXAMPLES = {
     "word": "context.py",
 }
 
-AGENT_DOC_TARGETS = ("codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot", "generic", "all")
+AGENT_DOC_TARGETS = ("codex", "claude", "gemini", "antigravity", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot", "generic", "all")
 
 HARNESS_CONFIGS = {
     "codex": {
@@ -104,6 +104,14 @@ HARNESS_CONFIGS = {
         "global_targets": [
             Path(".gemini") / "GEMINI.md",
             Path(".gemini") / "flue.md",
+        ],
+    },
+    "antigravity": {
+        "commands": ["antigravity"],
+        "config_dir": Path(".antigravity"),
+        "global_targets": [
+            Path(".antigravity") / "skills" / "flue" / "SKILL.md",
+            Path(".antigravity") / "AGENTS.md",
         ],
     },
     "qwen": {
@@ -864,6 +872,36 @@ def install_gemini_docs(args):
     return ok
 
 
+def install_antigravity_docs(args):
+    ok = True
+    if args.path:
+        bundle_dir = Path(args.path).expanduser() / "flue"
+        ok = install_local_docs_bundle(
+            bundle_dir,
+            entry_filename="SKILL.md",
+            entry_text=installed_skill_text(
+                "Use when Antigravity needs to inspect, install, test, or run Flue adapters to control supported Windows and macOS desktop apps through local scripting bridges.",
+            ),
+            force=args.force,
+        ) and ok
+    else:
+        for home in home_candidates():
+            bundle_dir = home / ".antigravity" / "skills" / "flue"
+            ok = install_local_docs_bundle(
+                bundle_dir,
+                entry_filename="SKILL.md",
+                entry_text=installed_skill_text(
+                    "Use when Antigravity needs to inspect, install, test, or run Flue adapters to control supported Windows and macOS desktop apps through local scripting bridges.",
+                ),
+                force=args.force,
+            ) and ok
+            begin, end, block = flue_pointer_block(bundle_dir / "SKILL.md")
+            agents = home / ".antigravity" / "AGENTS.md"
+            upsert_marked_block(agents, begin, end, block)
+            print(agents)
+    return ok
+
+
 def install_cursor_docs(args):
     ok = True
     if args.path:
@@ -1151,6 +1189,17 @@ def uninstall_gemini_docs(args):
     return removed
 
 
+def uninstall_antigravity_docs(args):
+    removed = False
+    if args.path:
+        removed = remove_named_dirs(Path(args.path).expanduser(), ("flue", "softwire")) or removed
+    else:
+        for home in home_candidates():
+            removed = remove_named_dirs(home / ".antigravity" / "skills", ("flue", "softwire")) or removed
+            removed = remove_flue_and_legacy_pointer_blocks(home / ".antigravity" / "AGENTS.md") or removed
+    return removed
+
+
 def uninstall_cursor_docs(args):
     removed = False
     if args.path:
@@ -1259,7 +1308,7 @@ def uninstall_universal_global_docs():
 
 
 def cmd_install_agent_docs(args):
-    targets = ("codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot", "generic") if args.target == "all" else (args.target,)
+    targets = ("codex", "claude", "gemini", "antigravity", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot", "generic") if args.target == "all" else (args.target,)
     ok = True
     for target in targets:
         if target == "codex":
@@ -1268,6 +1317,8 @@ def cmd_install_agent_docs(args):
             ok = install_claude_docs(args) and ok
         elif target == "gemini":
             ok = install_gemini_docs(args) and ok
+        elif target == "antigravity":
+            ok = install_antigravity_docs(args) and ok
         elif target == "qwen":
             ok = install_qwen_docs(args) and ok
         elif target == "cursor":
@@ -1295,7 +1346,7 @@ def cmd_uninstall(args):
         if not targets:
             targets = ["generic"]
     elif args.agent == "all":
-        targets = ["codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot", "generic"]
+        targets = ["codex", "claude", "gemini", "antigravity", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot", "generic"]
     else:
         targets = [args.agent]
 
@@ -1308,6 +1359,8 @@ def cmd_uninstall(args):
             removed_any = uninstall_claude_docs(args) or removed_any
         elif target == "gemini":
             removed_any = uninstall_gemini_docs(args) or removed_any
+        elif target == "antigravity":
+            removed_any = uninstall_antigravity_docs(args) or removed_any
         elif target == "qwen":
             removed_any = uninstall_qwen_docs(args) or removed_any
         elif target == "cursor":
@@ -1337,7 +1390,7 @@ def cmd_setup(args):
             return 1
         chosen = targets
     elif args.agent == "all":
-        chosen = ["codex", "claude", "gemini", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot"]
+        chosen = ["codex", "claude", "gemini", "antigravity", "qwen", "cursor", "cline", "kilo", "hermes", "opencode", "openclaw", "copilot"]
     else:
         chosen = [args.agent]
 

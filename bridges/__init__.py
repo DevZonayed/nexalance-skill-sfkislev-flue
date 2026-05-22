@@ -1,1 +1,1 @@
-"""Shared helpers for local creative software adapters."""
+"""Shared helpers for local creative software adapters.""" 

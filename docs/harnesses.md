@@ -14,6 +14,7 @@ for harnesses that discover skills there out of the box.
 | Codex                 | Installs `~/.codex/skills/flue/` with `SKILL.md`, `shared/*`, `docs/*`, and `adapters/*/APP.md`, then upserts a Flue pointer block into `~/.codex/AGENTS.md`. |
 | Claude Code           | Installs `~/.claude/skills/flue/` with the local docs bundle and upserts a Flue pointer block into `~/.claude/CLAUDE.md`. |
 | Gemini CLI            | Installs `~/.gemini/flue/` with the local docs bundle and upserts a Flue pointer block into `~/.gemini/GEMINI.md`. |
+| Antigravity CLI       | Installs `~/.antigravity/skills/flue/` with the local docs bundle and upserts a Flue pointer block into `~/.antigravity/AGENTS.md`. |
 | Qwen CLI              | Installs `~/.qwen/flue/` with the local docs bundle and upserts a Flue pointer block into `~/.qwen/QWEN.md`. |
 | GitHub Copilot        | Installs `~/.copilot/skills/flue/` with the local docs bundle and writes global Copilot instruction files so Copilot can discover the skill outside any single repository. |
 | Cursor                | Installs a global skill at `~/.cursor/skills/flue/` with `SKILL.md`, `shared/*`, `docs/*`, and `adapters/*/APP.md`. |

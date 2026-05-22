@@ -29,6 +29,7 @@ For deterministic setup:
 flue setup --agent codex
 flue setup --agent claude
 flue setup --agent gemini
+flue setup --agent antigravity
 flue setup --agent qwen
 flue setup --agent cursor
 flue setup --agent kilo
